@@ -5,7 +5,7 @@
 # to folks new to this field but experienced authors are more than welcomed to take anything
 # you find useful here and build on it yourselves.
 #
-#  Installation Guide:
+#  Installation Guide for Linux:
 #       1. Install 'git' tool
 #               *Installation varies by distro
 #               *Super user (SUDO) access might be needed to perform this action
@@ -13,6 +13,9 @@
 #               *Super user (SUDO) access might be needed to perform this action
 #       3. Go into new directory created and make file executabel (chmod +x <filename>
 #       4. Run by doing ./<filename>
+#  
+#  Installation Guide for Windows Users:
+#	-----COMING SOON!!!-----
 #
 #  OPTIONAL:
 #		    For Linux Users: 
