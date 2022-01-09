@@ -1,0 +1,22 @@
+# The intent of this repo is to provide simple scripts to help have a better understanding
+# of how they are built and how beneficial they can be. Scripting helps automate small or
+# big everyday tasks, and it's crucial to understand their structure to start building your
+# own and implementing them into your daily workflow. These scripts will be more beneficial
+# to folks new to this field but experienced authors are more than welcomed to take anything
+# you find useful here and build on it yourselves.
+#
+#  Installation Guide:
+#       1. Install 'git' tool
+#               *Installation varies by distro
+#               *Super user (SUDO) access might be needed to perform this action
+#       2. Use: git clone https://gist.github.com/SimpleInteractiveScripts.git
+#               *Super user (SUDO) access might be needed to perform this action
+#       3. Go into new directory created and make file executabel (chmod +x <filename>
+#       4. Run by doing ./<filename>
+#
+#  OPTIONAL:
+#		    For Linux Users: 
+#			- Move script to /usr/sbin/ to call on it like any normal command.
+#				*Super user (SUDO) access might be needed to perform this action
+#			- See also GitHub on CLI (gh): https://github.com/cli/cli
+#				*For Linux Users: https://github.com/cli/cli/blob/trunk/docs/install_linux.md
