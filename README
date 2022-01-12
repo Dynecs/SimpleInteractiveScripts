@@ -11,7 +11,7 @@
 #               *Super user (SUDO) access might be needed to perform this action
 #       2. Use: git clone https://gist.github.com/SimpleInteractiveScripts.git
 #               *Super user (SUDO) access might be needed to perform this action
-#       3. Go into new directory created and make file executabel (chmod +x <filename>
+#       3. Go into new directory created and make file executabel (chmod +x <filename>)
 #       4. Run by doing ./<filename>
 #  
 #  Installation Guide for Windows Users:
