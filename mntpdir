@@ -10,7 +10,7 @@
 #  -- Made this tool for learning purposes and to automate the task of
 #     making a MPD for mass storage devices.
 #  -- Updates of this script are under development to allow use of
-#     the sub tools within.
+#     the subtools within and to increase functionality.
 #  -- REPO: https://github.com/Dynecs/SimpleInteractiveScripts.git
 #
 #
@@ -31,106 +31,272 @@
 #  along with this program; if not, see <https://www.gnu.org/licenses/>
 #
 ####################################################################
-#
-# subdirectory creation
-Subdir()
+# Program Variables:
+
+####################################################################
+# ----------------------- Options / Flags ------------------------ #
+
+Gplnotif()
 {
-	# Skip to subdirectory creation
-   echo ""
-   echo "What would you like to name this subdirectory?" | pv -qL 25
-   sleep .5
-	 read REPLY
-   echo "Calling on "mkdir" command." | pv -qL 25
-	 sleep .5
-   sudo mkdir -v /run/media/$USER/$REPLY | pv -qL 25
-   sleep .5
-   echo "All Done!"
-   sleep .5
-   echo "Terminating tool"
+  # GPL License Notification
+  echo ""
+  echo "# Copyright (C) 2022 Dynecs"
+  echo "# dynecs_@outlook.com"
+  echo "#"
+  echo "# This program is free software; you can redistribute it and/or modify"
+  echo "# it under the terms of the GNU General Public License as published by"
+  echo "# the Free Software Foundation; either Version 3 of the License, or"
+  echo "# (at your option) any later version."
+  echo "#"
+  echo "# This program is distributed in the hope that it will be useful,"
+  echo "# but WITHOUT ANY WARRANTY; without even the implied warranty of"
+  echo "# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the"
+  echo "# GNU General Public License for more details."
+  echo "#"
+  echo "# You should have received a copy of the GNU General Public License"
+  echo "# along with this program; if not, see <https://www.gnu.org/licenses/>"
+  echo ""
 }
 
-####################################################################
-# ---------------------- Options and Flags ----------------------- #
+Help()
+{
+  # Display Help
+  echo ""
+  echo "Toll to create mount point directory in /run/media"
+  echo "Syntax: mntpdir [-g|h|R|s|V]"
+  echo "Options"
+  echo "g   Print the GPL license notification."
+  echo "h   Print this help menu."
+  echo "R   Robust mode: Runs without typing effect."
+  echo "s   Subdirectory creation only: Make mount point"
+  echo "    subdirectory in /run/media/<USER>"
+  echo "V   Print Software version and exit."
+  echo ""
+}
 
-# Get the options
-while getopts ":s" option; do
-   case $option in
-      s) # subdirectory creation
-         Subdir
-         exit;;
-     \?) # Invalid option
-         echo "Error: Invalid option"
-	       exit;;
-   esac
+Robust()
+{
+  # Robust mode: Runs without typing effect
+  echo ""
+  echo "Starting tool."
+  sleep .5
+  echo "Creating session directory '$USER' inside /run/media"
+  sleep 1
+  echo "One moment..."
+    if
+      [[ -d "/run/media/$USER" ]]
+    then
+      echo ""
+      sleep 2
+      echo "Hmm... Session directory already exists."
+      sleep .5
+      echo " - Skipping to subdirectory creation."
+    else
+      echo ""
+      sleep .5
+      echo "Calling on 'mkdir' command."
+      sleep .5
+      sudo mkdir -v /run/media/$USER
+      echo ""
+      sleep .5
+      echo " - Moving to subdirectory creation."
+    fi
+  echo ""
+  sleep .5
+  echo "What would you like to name this subdirectory?"
+  read REPLY
+  sleep .5
+    if
+      [[ -d "/run/media/$USER/$REPLY" ]]
+    then
+      echo ""
+      sleep .5
+      echo "That directory already exists."
+      sleep .5
+      echo "Please select a different name."
+      read REPLY
+      sleep .5
+        if
+          [[ -d "/run/media/$USER/$REPLY" ]]
+        then
+          echo "That directory already exists."
+          echo ""
+          sleep 1
+          echo "Please check name inside of /run/media/$USER and try again with -s."
+          sleep 2
+          echo "Terminating tool."
+        else
+          echo "Calling on 'mkdir' command."
+          sleep .5
+          sudo mkdir -v /run/media/$USER/$REPLY
+          echo "All done!"
+          sleep 1
+          echo "Terminating tool."
+          sleep 2
+        fi
+    else
+      echo "Calling on 'mkdir' command."
+      sleep .5
+      sudo mkdir -v /run/media/$USER/$REPLY
+      echo "All done!"
+      sleep 1
+      echo "Terminating tool."
+      sleep 2
+    fi
+  echo ""
+}
+
+Subdir()
+{
+  # Subdirectory creation: Skips to subdirectory creation
+  echo ""
+  echo "Creating subdirectory in /run/media/$USER"
+  sleep .5
+  echo "What would you like to name this subdirectory?"
+  read REPLY
+  sleep .5
+    if
+      [[ -d "/run/media/$USER/$REPLY" ]]
+    then
+      echo ""
+      sleep .5
+      echo "That directory already exists."
+      sleep .5
+      echo "Please select a different name."
+      read REPLY
+      sleep .5
+        if
+          [[ -d "/run/media/$USER/$REPLY" ]]
+        then
+          echo "That directory already exists."
+          echo ""
+          sleep 1
+          echo "Please check name inside of /run/media/$USER and try again with -s."
+          sleep 2
+          echo "Terminating tool."
+        else
+          echo "Calling on 'mkdir' command."
+          sleep .5
+          sudo mkdir -v /run/media/$USER/$REPLY
+          echo "All done!"
+          sleep 1
+          echo "Terminating tool."
+          sleep 2
+        fi
+    else
+      echo "Calling on 'mkdir' command."
+      sleep .5
+      sudo mkdir -v /run/media/$USER/$REPLY
+      echo "All done!"
+      sleep 1
+      echo "Terminating tool."
+      sleep 2
+    fi
+}
+
+Version()
+{
+  # Display program version.
+  echo ""
+  echo "# mntpdir: mount point directory"
+  echo "# Version 1.5 - Copyright (C) 2022 Dynecs GNU GPL (See -g)."
+  echo "# Updates of this script are under development to allow use of"
+  echo "# the subtools within and to increase functionality."
+  echo "# Version 2 release date: TBD"
+  echo ""
+}
+
+while getopts ":ghRsV" flags
+do
+  case $flags in
+      g) # GNU GPL notification
+          Gplnotif
+          exit;;
+      h) # Display Help
+          Help
+          exit;;
+      R) # Robust mode
+          Robust
+          exit;;
+      s) # Subdirectory creation
+          Subdir
+          exit;;
+      V) # Display Version
+          Version
+          exit;;
+      \?) # Invalid option
+          echo "Error: Invalid option"
+          exit;;
+  esac
 done
 
-####################################################################
+#==================================================================#
+#------------------------- Main Program ---------------------------#
+
 echo ""
 echo "Starting tool." | pv -qL 21
 sleep .5
-echo "Creating session directory '$USER' inside /run/media/ " | pv -qL 21
+echo "Creating session directory '$USER' inside /run/media" | pv -qL 21
 sleep 1
 echo "One moment..." | pv -qL 21
-	if
-		[ -d "/run/media/$USER" ]
-	then
-		echo ""
-		sleep 2
-     	        echo "Hmm... Session directory already exists." | pv -qL 21
-		sleep .5
-		echo "- Skipping to subdirectory creation." | pv -qL 21
-	else
-		echo ""
-		sleep .5
-		echo "Calling on 'mkdir' command." | pv -qL 21
-		sleep .5
-		sudo mkdir -v /run/media/$USER | pv -qL 21
-		echo ""
-		sleep .5
-		echo "- Moving to subdirectory creation." | pv -qL 21
-	fi
+  if
+    [[ -d "/run/media/$USER" ]]
+  then
+    echo ""
+    sleep 2
+    echo "Hmm... Session directory already exists." | pv -qL 21
+    sleep .5
+    echo " - Skipping to subdirectory creation." | pv -qL 21
+  else
+    echo ""
+    sleep .5
+    echo "Calling on 'mkdir' command." | pv -qL 21
+    sleep .5
+    sudo mkdir -v /run/media/$USER | pv -qL 21
+    echo ""
+    sleep .5
+    echo " - Moving to subdirectory creation." | pv -qL 21
+  fi
 echo ""
 sleep .5
 echo "What would you like to name this subdirectory?" | pv -qL 21
 read REPLY
 sleep .5
-	if
-		[ -d "/run/media/$USER/$REPLY" ]
-	then
-		echo ""
-		sleep .5
-		echo "That directory already exists." | pv -qL 21
-		sleep .5
-		echo "Please slect a different name." | pv -qL 21
-		sleep .5
-		read REPLY
-		sleep .5
-			if
-				[ -d "/run/media/$USER/$REPLY" ]
-			then
-				echo "That directory already exists." | pv -qL 21
-				echo ""
-				sleep 1
-				echo "Please check names inside of /run/media/$USER and try again with -s." | pv -qL 21
-				sleep .5
-				echo "Terminating tool." | pv -qL 21
-				sleep 2
-			else
-				echo "Calling on 'mkdir' command." | pv -qL 21
-				sleep .5
-				sudo mkdir -v /run/media/$USER/$REPLY | pv -qL 21
-				echo "All done!" | pv -qL 21
-				sleep 1
-				echo "Terminating tool." | pv -qL 21
-				sleep 2
-			fi
-	else
-		echo "Calling on 'mkdir' command." | pv -qL 21
-		sleep .5
-		sudo mkdir -v /run/media/$USER/$REPLY | pv -qL 21
-		echo "All done!" | pv -qL 21
-		sleep 1
-		echo "Terminating tool." | pv -qL 21
-		sleep 2
-	fi
+  if
+    [[ -d "/run/media/$USER/$REPLY" ]]
+  then
+    echo ""
+    sleep .5
+    echo "That directory already exists." | pv -qL 21
+    sleep .5
+    echo "Please select a different name." | pv -qL 21
+    read REPLY
+    sleep .5
+      if
+        [[ -d "/run/media/$USER/$REPLY" ]]
+      then
+        echo "That directory already exists." | pv -qL 21
+        echo ""
+        sleep 1
+        echo "Please check name inside of /run/media/$USER and try again with -s." | pv -qL 21
+        sleep 2
+        echo "Terminating tool." | pv -qL 21
+      else
+        echo "Calling on 'mkdir' command." | pv -qL 21
+        sleep .5
+        sudo mkdir -v /run/media/$USER/$REPLY | pv -qL 21
+        echo "All done!" | pv -qL 21
+        sleep 1
+        echo "Terminating tool." | pv -qL 21
+        sleep 2
+      fi
+  else
+    echo "Calling on 'mkdir' command." | pv -qL 21
+    sleep .5
+    sudo mkdir -v /run/media/$USER/$REPLY | pv -qL 21
+    echo "All done!" | pv -qL 21
+    sleep 1
+    echo "Terminating tool." | pv -qL
+    sleep 2
+  fi
 echo ""
