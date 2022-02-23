@@ -62,12 +62,12 @@ Help()
 {
   # Display Help
   echo ""
-  echo "Toll to create mount point directory in /run/media"
+  echo "Tool to create mount point directory in /run/media"
   echo "Syntax: mntpdir [-g|h|R|s|V]"
   echo "Options"
   echo "g   Print the GPL license notification."
   echo "h   Print this help menu."
-  echo "R   Robust mode: Runs without typing effect."
+  echo "R   Robust mode: No typing effect; shorter sleep timers."
   echo "s   Subdirectory creation only: Make mount point"
   echo "    subdirectory in /run/media/<USER>"
   echo "V   Print Software version and exit."
@@ -76,24 +76,20 @@ Help()
 
 Robust()
 {
-  # Robust mode: Runs without typing effect
+  # Robust mode: Runs without typing effect and shorter sleep timers
   echo ""
-  echo "Starting tool."
   sleep .5
   echo "Creating session directory '$USER' inside /run/media"
-  sleep 1
-  echo "One moment..."
+  sleep .5
     if
       [[ -d "/run/media/$USER" ]]
     then
       echo ""
-      sleep 2
       echo "Hmm... Session directory already exists."
       sleep .5
       echo " - Skipping to subdirectory creation."
     else
       echo ""
-      sleep .5
       echo "Calling on 'mkdir' command."
       sleep .5
       sudo mkdir -v /run/media/$USER
@@ -101,49 +97,66 @@ Robust()
       sleep .5
       echo " - Moving to subdirectory creation."
     fi
-  echo ""
   sleep .5
+  echo ""
   echo "What would you like to name this subdirectory?"
   read REPLY
-  sleep .5
     if
       [[ -d "/run/media/$USER/$REPLY" ]]
     then
+      sleep .5
       echo ""
-      sleep .5
       echo "That directory already exists."
-      sleep .5
       echo "Please select a different name."
       read REPLY
-      sleep .5
         if
           [[ -d "/run/media/$USER/$REPLY" ]]
         then
+          sleep .5
           echo "That directory already exists."
           echo ""
-          sleep 1
-          echo "Please check name inside of /run/media/$USER and try again with -s."
-          sleep 2
+          echo "Please check names inside of /run/media/$USER and try again with -s."
+          sleep .5
           echo "Terminating tool."
         else
-          echo "Calling on 'mkdir' command."
           sleep .5
+          echo "Calling on 'mkdir' command."
           sudo mkdir -v /run/media/$USER/$REPLY
-          echo "All done!"
-          sleep 1
-          echo "Terminating tool."
-          sleep 2
         fi
     else
-      echo "Calling on 'mkdir' command."
       sleep .5
+      echo "Calling on 'mkdir' command."
       sudo mkdir -v /run/media/$USER/$REPLY
-      echo "All done!"
-      sleep 1
-      echo "Terminating tool."
-      sleep 2
     fi
+  sleep .5
   echo ""
+  echo "Would you like to mount a device to the new subdirectory now?"
+  read REPLY1
+    if
+      [[ "$REPLY1" = "Y" ]] || [[ "$REPLY1" = "y" ]] || [[ "$REPLY1" = "Yes" ]] || [[ "$REPLY1" = "yes" ]]
+    then
+      sleep .5
+      echo ""
+      echo "Which device would you like to mount?"
+      echo "-- Use absolute path of device in selection!!!"
+      blkid -o device | grep /dev/s && blkid -o device | grep /dev/n && blkid -o device | grep /dev/h
+      echo "----------------------"
+      read REPLY2
+      sudo mount -v $REPLY2 /run/media/$USER/$REPLY
+      echo ""
+      echo "Please carefully read warnings, if any, displayed by the 'mount' command."
+      echo "Action to correct these warnings should be taken immediately."
+      sleep 1
+      echo ""
+      echo "All done!"
+      sleep .5
+      echo "Terminating tool."
+    else
+      sleep .5
+      echo "All done!"
+      echo "Terminating tool."
+    fi
+  echo""
 }
 
 Subdir()
@@ -189,8 +202,25 @@ Subdir()
       sudo mkdir -v /run/media/$USER/$REPLY
       echo "All done!"
       sleep 1
+    fi
+  echo ""
+  echo "Would you like to mount a device to this subdirectory now?"
+  read $REPLY1
+  sleep .5
+    if
+      [[ "$REPLY2" = "Y" ]] || [[ "$REPLY2" = "y" ]] || [[ "$REPLY2" = "Yes" ]] || [[ "$REPLY2" = "yes" ]]
+    then
+      echo ""
+      echo "Which device would you like to mount?"
+      blkid -o device | grep /dev/s && blkid -o device | grep /dev/n && blkid -o device | grep /dev/h
+      read $REPLY2
+      sleep .5
+      sudo mount -v $REPLY2 /run/media/$USER/$REPLY
+      sleep .5
+    else
+      echo ""
       echo "Terminating tool."
-      sleep 2
+      sleep 1
     fi
 }
 
@@ -199,10 +229,10 @@ Version()
   # Display program version.
   echo ""
   echo "# mntpdir: mount point directory"
-  echo "# Version 1.5 - Copyright (C) 2022 Dynecs GNU GPL (See -g)."
+  echo "# Version 2.0 - Copyright (C) 2022 Dynecs GNU GPL 3.0 (See -g)."
   echo "# Updates of this script are under development to allow use of"
   echo "# the subtools within and to increase functionality."
-  echo "# Version 2 release date: TBD"
+  echo "# Version 2.5 under development."
   echo ""
 }
 
@@ -285,18 +315,38 @@ sleep .5
         echo "Calling on 'mkdir' command." | pv -qL 21
         sleep .5
         sudo mkdir -v /run/media/$USER/$REPLY | pv -qL 21
-        echo "All done!" | pv -qL 21
-        sleep 1
-        echo "Terminating tool." | pv -qL 21
-        sleep 2
       fi
   else
     echo "Calling on 'mkdir' command." | pv -qL 21
     sleep .5
     sudo mkdir -v /run/media/$USER/$REPLY | pv -qL 21
-    echo "All done!" | pv -qL 21
-    sleep 1
-    echo "Terminating tool." | pv -qL
-    sleep 2
   fi
+sleep .5
 echo ""
+echo "Would you like to mount a device to the new subdirectory now?" | pv -qL 21
+read REPLY1
+  if
+    [[ "$REPLY1" = "Y" ]] || [[ "$REPLY1" = "y" ]] || [[ "$REPLY1" = "Yes" ]] || [[ "$REPLY1" = "yes" ]]
+  then
+    sleep .5
+    echo ""
+    echo "Which device would you like to mount?" | pv -qL 21
+    echo "-- Use absolute path of device in selection!!!" | pv -qL 21
+    blkid -o device | grep /dev/s && blkid -o device | grep /dev/n && blkid -o device | grep /dev/h
+    echo "----------------------"
+    read REPLY2
+    sudo mount -v $REPLY2 /run/media/$USER/$REPLY | pv -qL 21
+    echo ""
+    echo "Please carefully read warnings, if any, displayed by the 'mount' command." | pv -qL 21
+    echo "Action to correct these warnings should be taken immediately." | pv -qL 21
+    sleep 1
+    echo ""
+    echo "All done!" | pv -qL 21
+    sleep .5
+    echo "Terminating tool." | pv -qL 21
+  else
+    sleep .5
+    echo "All done!" | pv -qL 21
+    echo "Terminating tool." | pv -qL 21
+  fi
+echo""
