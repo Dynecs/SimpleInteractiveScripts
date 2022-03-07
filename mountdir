@@ -1,0 +1,68 @@
+#!/bin/bash
+#
+#  Interactive tool to create new directories and mount external mass
+#  storage devices (USB, SSD, etc...) through BASH. This will allow
+#  access to the storage like a normal directory.
+#
+#  -- Version 1.0
+#  -- Made this tool for the purpose of automating the directory creation
+#     and mounting tasks of mass media devices.
+#  -- Updats of this script are currently under development to increase
+#     functionality.
+#  -- REPO: https://github.com/Dynecs/SimpleInteractiveScripts.git
+#
+#  Copyright (C) 2022 Dynecs
+#  dynecs_@outlook.com
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, see <https://www.gnu.org/licenses/>
+#
+####################################################################
+
+echo ""
+sleep .5
+echo "NOTICE: Use absolute path for new directory!!!"
+echo "By default, new dir is created in pwd."
+echo "New directory?"
+read REPLY1
+sleep .5
+echo "Calling on 'mkdir' command."
+echo "One moment..."
+sudo mkdir -v $REPLY1
+sleep .5
+echo ""
+echo "Would you like to mount a device to this subdirectory now?"
+read REPLY2
+sleep .5
+  if
+    [[ "$REPLY2" = "Y" ]] || [[ "$REPLY2" = "y" ]] || [[ "$REPLY2" = "Yes" ]] || [[ "$REPLY2" = "yes" ]]
+  then
+    echo "Which device would you like to mount?"
+    blkid -o device | grep /dev/s && blkid -o device | grep /dev/n && blkid -o device | grep /dev/h
+    echo "----------------------"
+    read REPLY3
+    sudo mount -v $REPLY3 $REPLY1
+    sleep .5
+    echo ""
+    echo "Please carefully read warnings, if any, displayed by the 'mount' command."
+    echo "Action to correct these warnings should be taken immediately."
+    sleep 3
+    echo ""
+    echo "Terminating tool."
+    sleep .5
+  else
+    echo ""
+    echo "Terminating tool."
+    sleep .5
+  fi
+echo""
